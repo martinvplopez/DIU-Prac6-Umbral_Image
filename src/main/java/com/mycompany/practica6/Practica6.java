@@ -1,9 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mycompany.practica6;
+
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -11,12 +11,13 @@ package com.mycompany.practica6;
  */
 public class Practica6 extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Practica6
-     */
+    JFileChooser fc= new JFileChooser();
+    FileNameExtensionFilter filtro=null;
     public Practica6() {
         initComponents();
         setLocationRelativeTo(null);
+        filtro=new FileNameExtensionFilter("Imágenes (jpg, png, jpeg)", "jpg", "png", "jpeg");
+        fc.setFileFilter(filtro);
     }
 
     /**
@@ -32,7 +33,6 @@ public class Practica6 extends javax.swing.JFrame {
         archivoMenu = new javax.swing.JMenu();
         abrirItem = new javax.swing.JMenuItem();
         guardarItem = new javax.swing.JMenuItem();
-        guardarAsItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         closeItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
@@ -45,48 +45,78 @@ public class Practica6 extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Umbralización Imagen");
 
+        archivoMenu.setMnemonic('A');
         archivoMenu.setText("Archivo");
 
         abrirItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         abrirItem.setText("Abrir");
         abrirItem.setToolTipText("");
+        abrirItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                abrirItemActionPerformed(evt);
+            }
+        });
         archivoMenu.add(abrirItem);
 
         guardarItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         guardarItem.setText("Guardar");
+        guardarItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                guardarItemActionPerformed(evt);
+            }
+        });
         archivoMenu.add(guardarItem);
-
-        guardarAsItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        guardarAsItem.setText("Guardar como...");
-        archivoMenu.add(guardarAsItem);
         archivoMenu.add(jSeparator1);
 
         closeItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         closeItem.setText("Cerrar aplicación");
+        closeItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closeItemActionPerformed(evt);
+            }
+        });
         archivoMenu.add(closeItem);
 
         jMenuBar1.add(archivoMenu);
 
+        editMenu.setMnemonic('E');
         editMenu.setText("Edición");
 
         umbralItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         umbralItem.setText("Umbralización");
+        umbralItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                umbralItemActionPerformed(evt);
+            }
+        });
         editMenu.add(umbralItem);
 
         jMenuBar1.add(editMenu);
 
+        verMenu.setMnemonic('V');
         verMenu.setText("Ver");
 
         verItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         verItem.setText("Ver Imagen");
+        verItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verItemActionPerformed(evt);
+            }
+        });
         verMenu.add(verItem);
 
         jMenuBar1.add(verMenu);
 
+        ayudaMenu.setMnemonic('H');
         ayudaMenu.setText("Ayuda");
 
         acercaItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         acercaItem.setText("Acerca de");
+        acercaItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                acercaItemActionPerformed(evt);
+            }
+        });
         ayudaMenu.add(acercaItem);
 
         jMenuBar1.add(ayudaMenu);
@@ -106,6 +136,54 @@ public class Practica6 extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void abrirItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_abrirItemActionPerformed
+        System.out.println("Abriendo");
+        fc.addChoosableFileFilter(filtro);
+        int rDialog=fc.showOpenDialog(null);
+        if (rDialog==JFileChooser.APPROVE_OPTION){
+            System.out.println("Archivo seleccionado");
+            File fichero=  fc.getSelectedFile();
+            String [] extensionArr= fichero.getName().split("\\.");
+            String extension= extensionArr[extensionArr.length-1];
+            System.out.println("Fichero: " + fichero.getName()+ " extension: " + extensionArr[extensionArr.length-1]);
+            if(!"jpg".equals(extension)||!"png".equals(extension)||!"jpeg".equals(extension)){
+                System.out.println("Archivo seleccionado no es una imagen válida. Comprueba la extension");
+            }
+        }
+        if (rDialog==JFileChooser.CANCEL_OPTION){
+            System.out.println("Nada seleccionado");
+        }
+        
+    }//GEN-LAST:event_abrirItemActionPerformed
+
+    private void guardarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarItemActionPerformed
+        System.out.println("Guardando");
+        int rDialog=fc.showSaveDialog(null);
+        if (rDialog==JFileChooser.APPROVE_OPTION){
+            System.out.println("Archivo seleccionado");
+            File fichero=  fc.getSelectedFile();
+        }
+        if (rDialog==JFileChooser.CANCEL_OPTION){
+            System.out.println("Nada seleccionado");
+        }
+    }//GEN-LAST:event_guardarItemActionPerformed
+
+    private void closeItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_closeItemActionPerformed
+
+    private void umbralItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_umbralItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_umbralItemActionPerformed
+
+    private void verItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_verItemActionPerformed
+
+    private void acercaItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acercaItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_acercaItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -149,7 +227,6 @@ public class Practica6 extends javax.swing.JFrame {
     private javax.swing.JMenu ayudaMenu;
     private javax.swing.JMenuItem closeItem;
     private javax.swing.JMenu editMenu;
-    private javax.swing.JMenuItem guardarAsItem;
     private javax.swing.JMenuItem guardarItem;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
