@@ -1,7 +1,13 @@
 package com.mycompany.practica6;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.opencv.core.Core;
 
@@ -152,23 +158,8 @@ public class Practica6 extends javax.swing.JFrame {
         if (rDialog==JFileChooser.APPROVE_OPTION){
             System.out.println("Archivo seleccionado");
             File fichero=  fc.getSelectedFile();
-            String [] extensionArr= fichero.getName().split("\\.");
-            String extension= extensionArr[extensionArr.length-1].trim();
-            System.out.println("Fichero: " + fichero.getName()+ " extension: " + extensionArr[extensionArr.length-1]);
-            switch(extension){
-                case "jpg":
-                    avisoLabel.setVisible(false);
-                    break;
-                case "png":
-                    avisoLabel.setVisible(false);
-                    break;
-                case "jpeg":
-                    avisoLabel.setVisible(false);
-                    break;
-                default:
-                    avisoLabel.setText("Archivo seleccionado no es una imagen válida. Comprueba la extensión");
-                    avisoLabel.setVisible(true);
-            }
+            checkFileExtension(fichero);
+            
         }
         if (rDialog==JFileChooser.CANCEL_OPTION){
             avisoLabel.setText("Nada seleccionado");
@@ -187,14 +178,36 @@ public class Practica6 extends javax.swing.JFrame {
         if (rDialog==JFileChooser.APPROVE_OPTION){
             System.out.println("Archivo seleccionado");
             File fichero=  fc.getSelectedFile();
+            String ext=checkFileExtension(fichero);
+            if(ext==""){
+                avisoLabel.setText("Guardando algo que no es una imagen");
+                avisoLabel.setVisible(true);
+            }
+            else if(fichero.exists()){
+               int res2 = JOptionPane.showConfirmDialog(rootPane
+                        , "AVISO: El fichero \""+fichero.getName()+"\" ya existe, ¿Quiere sobrescribirlo?."
+                        ,"Sobrescribir Fichero", JOptionPane.YES_NO_OPTION);
+                if(res2==JOptionPane.YES_OPTION){
+                    System.out.println("Imagen Guardada sobreescrita");
+                }else{
+                    System.out.println("Imagen Guardada");
+
+                }
+            }
+            /*try{
+                //ImageIO.write((BufferedImage)imagen,ext ,fichero);
+            }catch(IOException e){
+                System.out.println("Error al guardar imagen");
+            }*/
         }
         if (rDialog==JFileChooser.CANCEL_OPTION){
-            System.out.println("Nada seleccionado");
+            avisoLabel.setText("Nada seleccionado");
+            avisoLabel.setVisible(true);
         }
     }//GEN-LAST:event_guardarItemActionPerformed
 
     private void closeItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeItemActionPerformed
-        // TODO add your handling code here:
+        exitAplication();
     }//GEN-LAST:event_closeItemActionPerformed
 
     private void umbralItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_umbralItemActionPerformed
@@ -206,9 +219,46 @@ public class Practica6 extends javax.swing.JFrame {
     }//GEN-LAST:event_verItemActionPerformed
 
     private void acercaItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acercaItemActionPerformed
-        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(rootPane,  "Software para aplicar proceso de umbralización de una imagen dado por el usuario.\n" +
+                                                 "Product Version: Umbralización Imagen Beta\n"+
+                                                 "Devs: @martinvplopez, @joelnavri"
+                        , "AYUDA", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_acercaItemActionPerformed
 
+    private void exitAplication(){
+        int res = JOptionPane.showConfirmDialog(rootPane, "¿Quieres cerrar la aplicación?."
+                ,"Cerrar Aplicación", JOptionPane.YES_NO_OPTION);
+        if(res==JOptionPane.YES_OPTION){
+            System.exit(0);
+            setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+        }
+    }  
+    
+    
+    private String checkFileExtension(File fichero){
+        String [] extensionArr= fichero.getName().split("\\.");
+            String extension= extensionArr[extensionArr.length-1].trim();
+            System.out.println("Fichero: " + fichero.getName()+ " extension: " + extensionArr[extensionArr.length-1]);
+            switch(extension){
+                case "jpg":
+                    avisoLabel.setVisible(false);
+                    return "jpg";
+                case "png":
+                    avisoLabel.setVisible(false);
+                    return "png";
+                case "jpeg":
+                    avisoLabel.setVisible(false);
+                    return "jpeg";
+                default:
+                    avisoLabel.setText("Archivo seleccionado no es una imagen válida. Comprueba la extensión");
+                    avisoLabel.setVisible(true);
+                    return "";
+            }
+
+    }
+    
+    
+    
     /**
      * @param args the command line arguments
      */
