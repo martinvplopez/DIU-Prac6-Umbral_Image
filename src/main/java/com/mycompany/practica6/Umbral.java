@@ -28,20 +28,25 @@ public class Umbral extends JPanel{
     private Mat imageMat, imageMatOriginal;
     private BufferedImage imagen;
     private BufferedImage imagen2;
+    private boolean hasImage;
     
     public Umbral(){    
+        hasImage=false;
     }
 
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        g.drawImage(imagen, 0, 0, null);
+        if(hasImage){
+            g.drawImage(imagen.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH), 0, 0, null);
+        }
     }
     
     public void openImage(File fichero){
         try {
             imagen=ImageIO.read(fichero);
             imagen2 = imagen;
+            hasImage=true;
             repaint();
         } catch (IOException ex) {
             Logger.getLogger(Umbral.class.getName()).log(Level.SEVERE, null, ex);
