@@ -38,7 +38,7 @@ public class Umbral extends JPanel{
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         if(hasImage){
-            g.drawImage(imagen.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH), 0, 0, null);
+            g.drawImage(imagen2.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH), 0, 0, null);
         }
     }
     
@@ -67,6 +67,7 @@ public class Umbral extends JPanel{
     public void closeImage(){
         imagen=null;
         imageMat=null;
+        hasImage=false;
         this.repaint();
     }
     
